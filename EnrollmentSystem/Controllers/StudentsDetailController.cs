@@ -2,6 +2,7 @@
 using EnrollmentSystem.Entities;
 using EnrollmentSystem.Models;
 using EnrollmentSystem.Services;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -52,7 +53,96 @@ namespace EnrollmentSystem.Controllers
             return CreatedAtRoute("GetDetail", new { studentId = entityToReturn.StudentId }, entityToReturn);
         }
 
-        [HttpPut]
+        [HttpPut("studentId")]
+        public IActionResult UpdateStudentDetail(Guid studentId, StudentDetailForUpdateDto studentDetail)
+        {
+            if (!_repository.StudentExists(studentId))
+            {
+                return NotFound();
+            }
+
+            var studentDetailToUpdate = _repository.GetStudentDetail(studentId);
+
+            if (studentDetailToUpdate == null)
+            {
+
+                var studentDetailToAdd = _mapper.Map<StudentDetail>(studentDetail);
+                studentDetailToAdd.StudentId = studentId;
+                _repository.AddStudentDetail(studentId, studentDetailToAdd);
+                _repository.Save();
+
+                var entityToReturn = _mapper.Map<StudentDetailDto>(studentDetailToAdd);
+
+                return CreatedAtRoute("GetDetail", new { studentId = entityToReturn.StudentId }, entityToReturn);
+            }
+
+            _mapper.Map(studentDetail, studentDetailToUpdate);
+            _repository.UpdateStudentDetail(studentId, studentDetailToUpdate);
+            _repository.Save();
+            return NoContent();
+        }
+
+        [HttpPatch("{studentId}")]
+        public IActionResult PartiallyUpdateStudentDetail(Guid studentId, JsonPatchDocument<StudentDetailForUpdateDto> patchDocument)
+        {
+
+            if (!_repository.StudentExists(studentId))
+            {
+                return NotFound();
+            }
+            var studentDetailToUpdate = _repository.GetStudentDetail(studentId);
+
+            if (studentDetailToUpdate == null)
+            {
+                var studentDetailDto = new StudentDetailForUpdateDto();
+                patchDocument.ApplyTo(studentDetailDto, ModelState);
+
+                if (!TryValidateModel(studentDetailDto))
+                {
+                    return ValidationProblem(ModelState);
+                }
+
+                var studentDetailToAdd = _mapper.Map<StudentDetail>(studentDetailDto);
+                studentDetailToAdd.StudentId = studentId;
+
+                _repository.AddStudentDetail(studentId, studentDetailToAdd);
+                _repository.Save();
+
+                var entityToReturn = _mapper.Map<StudentDto>(studentDetailToAdd);
+
+                return CreatedAtRoute("GetDetail", new { studentId = entityToReturn.Id }, entityToReturn);
+            }
+
+            var studentDetailToPatch = _mapper.Map<StudentDetailForUpdateDto>(studentDetailToUpdate);
+            // add validation
+            patchDocument.ApplyTo(studentDetailToPatch, ModelState);
+
+            if (!TryValidateModel(studentDetailToPatch))
+            {
+                return ValidationProblem(ModelState);
+            }
+
+            _mapper.Map(studentDetailToPatch, studentDetailToUpdate);
+            _repository.UpdateStudentDetail(studentId, studentDetailToUpdate);
+            _repository.Save();
+            return NoContent();
+        }
+
+        [HttpDelete]
+        public IActionResult DeleteStudentDetail(Guid studentId)
+        {
+            if (!_repository.StudentExists(studentId))
+            {
+                return NotFound();
+            }
+
+            var studentDetailToDelete = _repository.GetStudentDetail(studentId);
+
+            _repository.DeleteStudentDetail(studentId, studentDetailToDelete);
+            _repository.Save();
+
+            return NoContent();
+        }
 
     }
 }
