@@ -50,8 +50,9 @@ namespace EnrollmentSystem.Controllers
             var entityToReturn = _mapper.Map<StudentDetailDto>(studentDetailEntity);
 
             return CreatedAtRoute("GetDetail", new { studentId = entityToReturn.StudentId }, entityToReturn);
-
         }
+
+        [HttpPut]
 
     }
 }
