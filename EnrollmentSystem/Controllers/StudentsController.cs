@@ -48,7 +48,7 @@ namespace EnrollmentSystem.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateStudent([FromBody]Student studentModel)
+        public IActionResult CreateStudent([FromBody]StudentForCreationDto studentModel)
         {
             if (!ModelState.IsValid)
             {
@@ -62,7 +62,7 @@ namespace EnrollmentSystem.Controllers
 
             var studentToReturn = _mapper.Map<StudentDto>(studentEntity);
 
-            return CreatedAtRoute("GetAuthor", new { studentId = studentToReturn.Id }, studentEntity);
+            return CreatedAtRoute("GetAuthor", new { studentId = studentToReturn.Id }, studentToReturn);
 
         }
 

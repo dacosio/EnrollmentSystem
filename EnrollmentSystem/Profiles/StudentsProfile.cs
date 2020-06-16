@@ -17,8 +17,15 @@ namespace EnrollmentSystem.Profiles
                opt => opt.MapFrom(src => $"{src.FirstName} {src.LastName}"))
                .ForMember(dest => dest.Age,
                opt => opt.MapFrom(src => src.Birthday.GetCurrentAge()));
-
             CreateMap<Models.StudentForCreationDto, Entities.Student>();
+
+            CreateMap<Entities.StudentDetail, Models.StudentDetailDto>();
+            CreateMap<Models.StudentDetailForCreationDto, Entities.StudentDetail>();
+
+            CreateMap<Entities.StudentRequirement, Models.StudentRequirementDto>();
+            CreateMap<Models.StudentRequirementForCreationDto, Entities.StudentRequirement>();
+
+            CreateMap<Entities.SchoolYear, Models.SchoolYearDto>().ReverseMap();
         }
 
     }

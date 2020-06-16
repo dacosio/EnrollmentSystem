@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EnrollmentSystem.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -12,6 +13,7 @@ namespace EnrollmentSystem.Models
 
         public string Gender { get; set; }
         public int Age { get; set; }
-        public object Student { get; internal set; }
+
+        //public ICollection<TransactionDto> Transactions { get; set; } 
     }
 }

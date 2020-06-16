@@ -20,20 +20,20 @@ namespace EnrollmentSystem.Services
         bool Save();
 
         /*Student Detail Repo*/
-        StudentDetail GetStudentDetail(Guid studentId, Guid studentDetailId);
+        StudentDetail GetStudentDetail(Guid studentId);
         void AddStudentDetail(Guid studentId, StudentDetail studentDetail);
         void UpdateStudentDetail(Guid studentId, StudentDetail studentDetail);
         void DeleteStudentDetail(Guid studentId, StudentDetail studentDetail);
 
 
         /*Student Requirement Repo*/
-        StudentRequirement GetStudentRequirement(Guid studentId, Guid studentRequirementId);
+        StudentRequirement GetStudentRequirement(Guid studentId);
         void AddStudentRequirements(Guid studentId, StudentRequirement studentRequirement);
         void UpdateStudentRequirement(Guid studentId, StudentRequirement studentRequirement);
         void DeleteStudentRequirement(Guid studentId, StudentRequirement studentRequirement);
 
         /*SchoolYear Repo*/
-        SchoolYear GetStudentSchoolYear(Guid studentId, Guid studentSchoolYearId);
+        SchoolYear GetStudentSchoolYear(Guid studentId);
         void AddStudentSchoolYear(Guid studentId, SchoolYear studentSchoolYear);
         void UpdateStudentSchoolYear(Guid studentId, SchoolYear studentSchoolYear);
         void DeleteStudentSchoolYear(Guid studentId, SchoolYear studentSchoolYear);
@@ -48,7 +48,9 @@ namespace EnrollmentSystem.Services
 
         /*Transaction Repo*/
         IEnumerable<Transaction> GetTransactions();
-        Transaction GetTransaction(Guid studentId, Guid employeeId, Guid transactionId);
+        Transaction GetTransaction(Guid transactionId);
+        //IEnumerable<Transaction> GetTransactionsOfEmployee(Guid employeeId);
+        //IEnumerable<Transaction> GetTransactionsOfStudent(Guid studentId);
         void AddTransaction(Guid studentId, Guid employeeId, Transaction transaction);
         void UpdateTransaction(Guid studentId, Guid employeeId, Transaction transaction);
         void DeleteTransaction(Guid studentId, Guid employeeId, Transaction transaction);

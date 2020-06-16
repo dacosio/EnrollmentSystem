@@ -1,5 +1,7 @@
 ﻿using EnrollmentSystem.DbContexts;
 using EnrollmentSystem.Entities;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -200,30 +202,27 @@ namespace EnrollmentSystem.Services
             return _context.Students.FirstOrDefault(e => e.Id == studentId);
         }
 
-        public StudentDetail GetStudentDetail(Guid studentId, Guid studentDetailId)
+        public StudentDetail GetStudentDetail(Guid studentId)
         {
             if (studentId == Guid.Empty)
             {
                 throw new ArgumentNullException(nameof(studentId));
             }
 
-            if (studentDetailId == Guid.Empty)
-            {
-                throw new ArgumentNullException(nameof(studentDetailId));
-            }
-
-            return _context.StudentDetails.FirstOrDefault(s => s.StudentId == studentId && s.StudentId == studentDetailId);
+            return _context.StudentDetails.FirstOrDefault(s => s.StudentId == studentId);
 
         }
 
-        public StudentRequirement GetStudentRequirement(Guid studentId, Guid studentRequirementId)
+        
+
+        public StudentRequirement GetStudentRequirement(Guid studentId)
         {
             if (studentId == Guid.Empty)
             {
                 throw new ArgumentNullException(nameof(studentId));
             }
 
-            return _context.StudentRequirements.FirstOrDefault(s => s.StudentId == studentId && s.StudentId == studentRequirementId);
+            return _context.StudentRequirements.FirstOrDefault(s => s.StudentId == studentId);
         }
 
         public IEnumerable<Student> GetStudents()
@@ -231,39 +230,49 @@ namespace EnrollmentSystem.Services
             return _context.Students.OrderByDescending(s => s.SchoolYear).ThenByDescending(s => s.LastName).ToList();
         }
 
-        public SchoolYear GetStudentSchoolYear(Guid studentId, Guid studentSchoolYearId)
+        public SchoolYear GetStudentSchoolYear(Guid studentId)
         {
             if (studentId == Guid.Empty)
             {
                 throw new ArgumentNullException(nameof(studentId));
             }
 
-            return _context.SchoolYears.FirstOrDefault(s => s.StudentId == studentSchoolYearId && s.StudentId == studentId);
+            return _context.SchoolYears.FirstOrDefault(s => s.StudentId == studentId);
         }
 
-        public Transaction GetTransaction(Guid studentId, Guid employeeId, Guid transactionId)
+        public Transaction GetTransaction(Guid transactionId)
         {
             if (transactionId == Guid.Empty)
             {
                 throw new ArgumentNullException(nameof(transactionId));
             }
 
-            if (studentId == Guid.Empty)
-            {
-                throw new ArgumentNullException(nameof(studentId));
-            }
-
-            if (employeeId == Guid.Empty)
-            {
-                throw new ArgumentNullException(nameof(employeeId));
-            }
-
-            return _context.Transactions.FirstOrDefault(t => t.Id == transactionId && t.StudentId == studentId && t.EmployeeId == employeeId);
+            return _context.Transactions.FirstOrDefault(t => t.Id == transactionId);
         }
 
         public IEnumerable<Transaction> GetTransactions()
         {
             return _context.Transactions.OrderByDescending(t => t.DateTimePaid).ToList();
+        }
+
+       /* public IEnumerable<Transaction> GetTransactionsOfEmployee(Guid employeeId)
+        {
+            //return from emp in _context.Employees
+            //       join tr in _context.Transactions
+            //       on emp.Id equals tr.EmployeeId
+            //       select new
+            //       {
+            //           FirstName = emp.FirstName,
+            //           AmountPaid = tr.AmountPaid
+            //       };
+
+            //return _context.Transactions.Join(_context.Employees, t=>t.EmployeeId, e => e.Id)
+            //    .Where(e=> e.EmployeeId == employeeId).ToList();
+        }*/
+
+        public IEnumerable<Transaction> GetTransactionsOfStudent(Guid studentId)
+        {
+            return _context.Transactions.Where(e => e.StudentId == studentId).ToList();
         }
 
         public bool Save()
